@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 //API 리소스 선언
 use App\Http\Resources\PostResource;
+//Facade Storage 선언
+use Illuminate\Support\Facades\Storage;
 //Facade 폼검증 선언
 use Illuminate\Support\Facades\Validator;
 
@@ -74,5 +76,55 @@ class PostController extends Controller
 
 		//글 단일 조회값 리턴
 		return new PostResource(true, 'Detail Data Post!', $post);
+	}
+
+	/**
+	 * 수정
+	 *
+	 * @param  mixed $request
+	 * @param  mixed $post
+	 * @return void
+	 */
+	public function update(Request $request, $id)
+	{
+		//폼 검증 유효성 규칙 선언
+		$validator = Validator::make($request->all(), [
+			'title'     => 'required',
+			'content'   => 'required',
+		]);
+
+		//폼 검증 유효성 오류시 처리
+		if ($validator->fails()) {
+			return response()->json($validator->errors(), 422);
+		}
+
+		//글ID로 찾기
+		$post = Post::find($id);
+
+		//이미지 존재 여부 체크 처리
+		if ($request->hasFile('image')) {
+			//이미지 업로드
+			$image = $request->file('image');
+			$image->storeAs('public/posts', $image->hashName());
+
+			//기존 이미지 삭제
+			Storage::delete('public/posts/' . basename($post->image));
+
+			//글 수정 및 이미지 변경
+			$post->update([
+				'image'     => $image->hashName(),
+				'title'     => $request->title,
+				'content'   => $request->content,
+			]);
+		} else {
+			//글 수정(이미지 제외)
+			$post->update([
+				'title'     => $request->title,
+				'content'   => $request->content,
+			]);
+		}
+
+		//처리 응답값 선언
+		return new PostResource(true, 'Data Post Berhasil Diubah!', $post);
 	}
 }
