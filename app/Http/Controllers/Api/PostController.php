@@ -60,4 +60,19 @@ class PostController extends Controller
 		//처리 응답값 선언
 		return new PostResource(true, 'Data Post Berhasil Ditambahkan!', $post);
 	}
+
+	/**
+	 * 조회
+	 *
+	 * @param  mixed $post
+	 * @return void
+	 */
+	public function show($id)
+	{
+		//글ID로 찾기
+		$post = Post::find($id);
+
+		//글 단일 조회값 리턴
+		return new PostResource(true, 'Detail Data Post!', $post);
+	}
 }
