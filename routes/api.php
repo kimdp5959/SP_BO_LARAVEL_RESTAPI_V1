@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,4 +20,4 @@ use Illuminate\Support\Facades\Route;
 // });
 
 //posts경로 선언
-Route::apiResource('/posts', App\Http\Controllers\Api\PostController::class);
+Route::apiResource('/v1/posts', PostController::class);
