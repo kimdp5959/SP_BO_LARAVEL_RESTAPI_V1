@@ -127,4 +127,25 @@ class PostController extends Controller
 		//처리 응답값 선언
 		return new PostResource(true, 'Data Post Berhasil Diubah!', $post);
 	}
+
+	/**
+	 * 삭제
+	 *
+	 * @param  mixed $post
+	 * @return void
+	 */
+	public function destroy($id)
+	{
+		//글ID로 찾기
+		$post = Post::find($id);
+
+		//이미지 삭제
+		Storage::delete('public/posts/' . basename($post->image));
+
+		//해당 글 삭제
+		$post->delete();
+
+		//처리 응답값 선언
+		return new PostResource(true, 'Data Post Berhasil Dihapus!', null);
+	}
 }
