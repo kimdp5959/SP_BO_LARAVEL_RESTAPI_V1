@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
+    private $pageTitle = "글";
+
 	/**
 	 * 기본화면(리스트)
 	 *
@@ -25,7 +27,7 @@ class PostController extends Controller
 		$posts = Post::latest()->paginate(5);
 
 		//API 리소스에 결과값 리턴
-		return new PostResource(true, 'List Data Posts', $posts);
+		return new PostResource(true, __('custom.cm_have_data_success', ['title' => $this->pageTitle]), $posts);
 	}
 
 	/**
@@ -60,7 +62,7 @@ class PostController extends Controller
 		]);
 
 		//처리 응답값 선언
-		return new PostResource(true, 'Data Post Berhasil Ditambahkan!', $post);
+		return new PostResource(true, __('custom.cm_create_success', ['title' => $this->pageTitle]), $post);
 	}
 
 	/**
@@ -75,7 +77,7 @@ class PostController extends Controller
 		$post = Post::find($id);
 
 		//글 단일 조회값 리턴
-		return new PostResource(true, 'Detail Data Post!', $post);
+		return new PostResource(true, __('custom.cm_exist_success', ['title' => $this->pageTitle]), $post);
 	}
 
 	/**
@@ -125,7 +127,7 @@ class PostController extends Controller
 		}
 
 		//처리 응답값 선언
-		return new PostResource(true, 'Data Post Berhasil Diubah!', $post);
+		return new PostResource(true, __('custom.cm_update_success', ['title' => $this->pageTitle]), $post);
 	}
 
 	/**
@@ -146,6 +148,6 @@ class PostController extends Controller
 		$post->delete();
 
 		//처리 응답값 선언
-		return new PostResource(true, 'Data Post Berhasil Dihapus!', null);
+		return new PostResource(true, __('custom.cm_delete_success', ['title' => $this->pageTitle]), null);
 	}
 }
